@@ -47,9 +47,9 @@ for((i=1;i<=$numOfArticles;i++)); do
 #	newer_text=$(tr ' ' '\n' <<< $new_text)
 done
 
-sed 's/ /\n/g' <<< $text 
+#sed 's/ /\n/g' <<< $text 
 
-#echo -e $text
+echo -e $text
 
 
 

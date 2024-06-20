@@ -13,9 +13,18 @@ int median(FILE *fp ){
 
     int lineNum;
     int grade;
-    int median=0.5*(N+1)
+    int median=0 //median is (N+1)/2 where N is the number of elements 
 
-    if ( grade>100 || (grade<0)){
+	cursorPositionForNumber=
+
+//firstly, pass on the line of the file and count the number of line, thus receiving N
+//afterwards, run on the histogram to find what number fit that range
+//after that, run on the list again to find the number that match that range and count till 
+//getting to the right index
+
+
+
+    if ( ( grade>UPPERBOUND ) || ( grade<LOWERBOUND ) ) {
         return Error(lineNum,grade);
     }
     // i assume i receive a file that looks like this
@@ -25,7 +34,7 @@ int median(FILE *fp ){
     //60
     //33
     //pass on everyline, if a number is >100 out to stderr
-
+	
 
 
     fclose(fp);

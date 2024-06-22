@@ -13,7 +13,7 @@ numOfArticles=$(grep -o $websiteUrl <<< $text | wc -l )
 #echo "the number of articles is:" ${numOfArticles}
 #echo -e "full text" ${text}
 
-for((i=1;i<=$numOfArticles;i++)); do
+for((i=1;i<=numOfArticles;i++)); do
 #	echo "Running Line is " $i "out of" $numOfArticles
 
 	#get the full link 	
@@ -32,25 +32,29 @@ for((i=1;i<=$numOfArticles;i++)); do
 #	echo "gantz count is :     " $gantzCount
 
 	if [ $netanyahuCount -eq 0 ] && [ $gantzCount -eq 0 ]; then
-		string_to_add=",-"
+		string_to_add=", -"
 	else
-		string_to_add=",${netanyahu},${netanyahuCount},${gantz},${gantzCount}"
+		string_to_add=", ${netanyahu}, ${netanyahuCount}, ${gantz}, ${gantzCount}"
 	fi
+
+	echo $link$string_to_add
 
 #	echo "string to add is" $string_to_add
 
 	newString=$link$string_to_add
 #	echo "NEWSTRING:" $newString
 
-	text="${text//$link/$newString}"
+#	text="${text//$link/$newString}"
 
 #	newer_text=$(tr ' ' '\n' <<< $new_text)
 done
 
 #sed 's/ /\n/g' <<< $text 
 
-echo -e $text
-
-
+#echo $text
+#echo "\n"
+#echo "\n"
+#echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"
+#echo -e $text
 
 

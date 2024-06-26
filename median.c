@@ -1,53 +1,61 @@
-#include <stdio.h>
-#include <string.h>
+#include "stdlib.h"
+#include "stdio.h"
+#include "string.h"
 #define UPPERBOUND 100
 #define LOWERBOUND 0
 
-int Error(int lineNumber, int Grade){
 
+int Error(int lineNumber, int Grade){
     fprintf(stderr,"Error at line %d: grade %d invalid",lineNumber,Grade);
     return 1;
 }
 
+int cmpfunc (const void * a, const void * b) {
+    return ( *(int*)a - *(int*)b );
+}
+
 int median(FILE *fp ){
-
-    int lineNum;
-    int grade;
-    int median=0 //median is (N+1)/2 where N is the number of elements 
-
-	cursorPositionForNumber=
-
 //firstly, pass on the line of the file and count the number of line, thus receiving N
-//afterwards, run on the histogram to find what number fit that range
-//after that, run on the list again to find the number that match that range and count till 
-//getting to the right index
+//afterwards allocate an array at that size and populate
+//preform qsort on it
+// return the element in the median spot
 
-
-
-    if ( ( grade>UPPERBOUND ) || ( grade<LOWERBOUND ) ) {
-        return Error(lineNum,grade);
+//old plan
+//~ afterwards, run on the histogram to find what number fit that range~
+//~after that, run on the list again to find the number that match that range and count till ~
+//~getting to the right index~
+int median;
+int lineNum=0;
+int grade;
+char buf[sizeof (int)+1]={0};
+while(fgets(buf,sizeof(int)+1,fp)){ //getting the number of elements
+        lineNum++;
     }
-    // i assume i receive a file that looks like this
-    // 100
-    // 9
-    //11
-    //60
-    //33
-    //pass on everyline, if a number is >100 out to stderr
-	
-
-
+int median_pos=((lineNum+1)/2);
+int *grades=(int*)malloc(sizeof(int)*lineNum);
+fseek(fp,0,SEEK_SET);
+lineNum=0;
+    while(fgets(buf,sizeof(int)+1,fp)){
+        grade=atoi(buf);
+        if ( ( grade>UPPERBOUND ) || ( grade<LOWERBOUND ) ) {
+            free(grades);
+            return Error(lineNum,grade);
+        }
+        grades[lineNum]=grade;
+        lineNum++;
+    }
+    qsort(grades,lineNum,sizeof(int),cmpfunc);
+    median=grades[median_pos-1];
+    free(grades);
     fclose(fp);
-
+   // printf("number of grades is: %d\nmedian is %d",lineNum,median);
 
     return median;
-
-
 }
 int main(int argc,char **argv) {
     FILE *fp;
 
-    if ( (argc==1) || !strcmp(argv[1]) ){
+    if ( (argc==1) || !strcmp(argv[1],"-") ){
         fp=stdin;
     }
     else{
@@ -57,5 +65,7 @@ int main(int argc,char **argv) {
         fprintf(stderr,"FILE NOT FOUND!!");
     }
 
-    return median(fp);
+    fprintf(stdout,"%d",median(fp));
+//    return median(fp);
+    return 1;
 }

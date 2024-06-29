@@ -39,6 +39,6 @@ min=$(./min.exe $path)
 
 ./hist.exe $course -nbins 10 > $folder_name/histogram.txt
 
-statistics=$avg"	"$median"	"$min"	"$max 		#possible room for error as tabs?
+statistics=$avg"\t"$median"\t"$min"\t"$max 		#possible room for error as tabs?
 
-echo $statistics >> $folder_name/statistics.txt
+echo -e $statistics >> $folder_name/statistics.txt

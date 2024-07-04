@@ -18,13 +18,11 @@ typedef struct {
 } Stack  ;
 
 Stack stack_create(int max_num_of_elem, elem_t* create_clone, void* create_destroy, void* create_print);
-size_t stack_size(Stack original_stack);
-int stack_push(Stack stack, elem_t* new_elem);
-bool stack_empty(Stack original_stack);
-void stack_print(Stack stack);
-size_t stack_capacity(Stack stack);
-
-
+size_t stack_size(Stack* original_stack);
+int stack_push(Stack* stack, elem_t* new_elem);
+bool stack_empty(Stack* original_stack);
+void stack_print(Stack* stack);
+size_t stack_capacity(Stack* stack);
 int stack_destroy(Stack *stack);
 void stack_pop(Stack *stack);
 elem_t* stack_peek(Stack *stack);

@@ -1,12 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "common.h"
-#include "stack.h"
 
-typedef struct Student Struct;
+typedef struct {
+    char *name;
+    int age;
+    int id;
+}Student;
 
-struct Student* create_student();
-struct Student* clone_student(Student *student);
+Student* create_student(const char* name, int age, int id);
+Student* clone_student(Student *student);
 void destroy_student(Student *student);
 void print_student(Student *student);

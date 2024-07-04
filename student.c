@@ -1,14 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "common.h"
-#include "stack.h"
+#include "student.h"
 
-typedef struct {
-    char *name;
-    int age;
-    int id;
-    }Student;
 
 
 Student* create_student(const char* name, int age, int id){
@@ -30,14 +21,17 @@ Student* clone_student(Student *student){
     if(!student->name || !student->age || !student->id){ //corrent failure?
         return NULL;
     }
-    Student *new_stu = create_student(student->name, student->age, student->id);
+    Student *new_stu;
+    new_stu->name=student->name;
+    new_stu->age=student->age;
+    new_stu->id=student->id;
 
     return new_stu;
 }
 
 
 void destroy_student(Student *student){
-    free(student->name);
+    //free(student->name);//TODO Test
     free(student);
 }
 

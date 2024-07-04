@@ -1,20 +1,4 @@
 #include "stack.h"
-
-typedef void * elem_t;
-typedef elem_t (*clone_t) (elem_t e);
-typedef void (*destroy_t) (elem_t e );
-typedef void (*print_t) (elem_t e );
-
-
-
-typedef struct {
-    elem_t* nodes;
-    int headIndex;
-    int maxSize ;
-    int elem_size; 
-    } Stack  ;
-
-
 Stack stack_create(int max_num_of_elem, elem_t* create_clone, void* create_destroy, void* create_print){
     Stack stack;
     //destroy_t elem_destroy = create_destroy;

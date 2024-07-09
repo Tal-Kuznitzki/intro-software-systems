@@ -5,7 +5,7 @@ struct student* student_create(const char* name, int age, int id){
     struct student* student = (struct student*)malloc(sizeof(struct student));
     //need to set empty values to avoid trash?
     if(student != NULL){
-        student->name = (char*)malloc(strlen(name) + 1);
+        student->name = (char*)malloc((strlen(name) + 1)*sizeof(char));
         if(student->name != NULL){
             strcpy(student->name, name);
         }
@@ -17,7 +17,7 @@ struct student* student_create(const char* name, int age, int id){
 }
 
 struct student* student_clone(struct student *student){
-    if(!student->name || !student->age || !student->id){ //corrent failure?
+    if(!student->name|| !student){ //corrent failure?
         return NULL;
     }
     struct student *new_stu;
@@ -28,16 +28,21 @@ struct student* student_clone(struct student *student){
 
 
 void student_destroy(struct student *student){
-    //free(student->name);//TODO Test
+    if(student->name){
+        free(student->name);
+    }
     free(student);
 }
 
 
 void student_print(struct student *student){
-    printf("student name: %s, age: %d, id: %d.\n",
+    printf("print func");
+    if(student){
+        printf("student name: %s, age: %d, id: %d.\n",
         student->name,
         student->age,
         student->id);
+    }
 }
 
 

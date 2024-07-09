@@ -88,10 +88,10 @@ int stack_push(struct stack* stack, elem_t* new_elem){
     int condition=FAIL;
     int numOfElem=stack_size(stack);
     if (numOfElem==stack->maxSize){
-        
+        //printf("push fail\n\n");
     }
     else if(numOfElem<stack->maxSize){
-        stack->nodes[stack->headIndex+1]=*new_elem;
+        stack->nodes[stack->headIndex+1]= new_elem;
         stack->headIndex++;
         condition=SUCCESS;
       /*  *stack.nodes=new_elem;
@@ -146,6 +146,7 @@ void stack_print(struct stack* stack){ //reversed ?
         //stackElement = stack->nodes[numOfElements-1];
         //stack->print_func(stackElement);
         stack->print_func(stack->nodes[numOfElements-1]);
+        //stack->print_func(stack->nodes + stack->elem_size*(numOfElements-1));
     }
 /*
 while(numOfElements>0){

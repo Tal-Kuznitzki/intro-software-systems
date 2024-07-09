@@ -22,21 +22,23 @@ struct student* student_clone(struct student *student){
     }
     struct student *new_stu;
     new_stu = student_create(student->name, student->age, student->id);
-
+    
     return new_stu;
 }
 
 
 void student_destroy(struct student *student){
-    if(student->name){
-        free(student->name);
+        printf("destroy\n");
+    if(student){
+        if(student->name){
+            free(student->name);
+        }
+        free(student);
     }
-    free(student);
 }
 
 
 void student_print(struct student *student){
-    printf("print func");
     if(student){
         printf("student name: %s, age: %d, id: %d.\n",
         student->name,
@@ -46,14 +48,13 @@ void student_print(struct student *student){
 }
 
 
-/* //main - for small sacle testing
+/*  //main - for small sacle testing
 
 int main(int argc, char const *argv[]) {
-    struct student *stu = create_student("aaa", 3, 1039);
-    print_student(stu);
-    struct student *stu2 = clone_student(stu);
-    print_student(stu2);
-    destroy_student(stu);
-    destroy_student(stu2);
-}
-*/
+    struct student *stu = student_create("aaa", 3, 1039);
+    student_print(stu);
+    struct student *stu2 = student_clone(stu);
+    student_print(stu2);
+    student_destroy(stu);
+    student_destroy(stu2);
+}*/

@@ -90,8 +90,8 @@ int stack_push(struct stack* stack, elem_t* new_elem){
     if (numOfElem==stack->maxSize){
         //printf("push fail\n\n");
     }
-    else if(numOfElem<stack->maxSize){
-        stack->nodes[stack->headIndex+1]= new_elem;
+    else if(numOfElem < (stack->maxSize)){
+        stack->nodes[stack->headIndex+1]= stack->clone_func(new_elem);
         stack->headIndex++;
         condition=SUCCESS;
       /*  *stack.nodes=new_elem;
@@ -177,5 +177,5 @@ size_t stack_capacity(struct stack* stack){
     if (stack->nodes==NULL){
         capacity=0;
     }*/
-    return (size_t)(stack->maxSize -stack_size(stack));
+    return (size_t)(stack->maxSize - stack_size(stack));
 }

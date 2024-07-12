@@ -28,7 +28,6 @@ struct student* student_clone(struct student *student){
 
 
 void student_destroy(struct student *student){
-        printf("destroy\n");
     if(student){
         if(student->name){
             free(student->name);

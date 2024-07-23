@@ -11,7 +11,6 @@
 #include "grades.h"
 #include <stdbool.h>
 //#include "liblinked-list.so"
-//TODO clone should return the cloned object IN STUDENT
 
 //course is a linkedList that will
 //inside student we have a linked list of courses
@@ -35,36 +34,51 @@ struct Student{
 struct grades* grades_init(){
     struct grades *grades = (struct grades*)malloc(sizeof(struct grades));
     grades->students = list_init(student_clone, student_destroy);
-
-    //TODO add return value;
-    //    return *grades;
+    return *grades;
 }
 /**
  * @brief Destroys "grades", de-allocate all memory!
  */
+
+void grades_destroy(struct grades *grades);
+int student_clone(struct Student *student, struct Student *new_stu);
+void student_destroy(struct Student *student);
+struct Course* course_init( const char *name,  const int grade);
+int course_clone(struct Course *course, struct Course *new_course );
+struct Course* course_destroy(struct Course *course);
+        
+
 void grades_destroy(struct grades *grades){
-    //why not just list_destroy(grades) ?
     if(grades){
         list_destroy(grades->students);
         free(grades);
     }
 }
-void student_clone(struct Student *student, struct Student *new_stu){
+int student_clone(struct Student *student, struct Student *new_stu){
     //checks
-    if(!student) return;
+    if(!student){
+        new_stu = NULL;
+        return 1;
+    }
 
     //initiate and copy non-list types
-    struct Student *student = (struct Student*)malloc(sizeof(struct Student));
-    strcpy(student->name,new_stu->name);
+    new_stu = (struct Student*)malloc(sizeof(struct Student));
+    new_stu->name = (char*)malloc(strlen(student->name));
+    strcpy(new_stu->name,student->name);
     new_stu->id = student->id;
     new_stu->courses = list_init(course_clone, course_destroy);
 
     //copy courses
     struct iterator* idx = list_begin(student->courses);
+    struct Course *temp_course;
     while(idx != NULL){
-        list_push_back(new_stu->courses, course_clone(list_get(idx)));
+        course_clone(list_get(idx), temp_course);
+        list_push_back(new_stu->courses, temp_course);
         list_next(idx);
     }
+    free(idx);
+
+    return 0;
 }
 void student_destroy(struct Student *student){
     if(student){
@@ -87,27 +101,32 @@ void student_destroy(struct Student *student){
  * in which they were inserted into "grades"
  */
 struct Course* course_init( const char *name,  const int grade){
-       struct Course *course;
+       struct Course *course=(struct *course)malloc(sizeof(struct Course));
        course->name=(char*)malloc(sizeof(name));
        strcpy(name,course->name);
        course->score=grade;
-    return course; //TODO verify
+    return course;
 }
-struct Course* course_clone(struct Course *course){
-    if (!course){
-        return NULL;
+int course_clone(struct Course *course, struct Course *new_course ) {
+    if (!course) {
+        new_course = NULL;
+        return 1;
     }
-    struct Course *new_course = course_init(course->name,course->score);
-    /** EHW WAY
-    struct Course *new_course = (struct Course*)malloc(sizeof(struct Course));
-    new_course->name=(char*)malloc(sizeof(course->name));
+    new_course = (struct Course*)malloc(sizeof(struct Course));
+    new_course->name = (char*)malloc(strlen(course->name));
     strcpy(course->name,new_course->name);
-    new_course->score=course->score;
-**/
-    return new_course;//TODO verify
+    new_course->score = course->score;
+    return 0;
+
+
 }
-struct Course* course_destroy(struct Student *student ,struct Course *course) {
-    list_remove(student->courses,course)
+struct Course* course_destroy(struct Course *course) {
+if (course){
+    if(course->name){
+        free(course->name);
+    }
+    free(course);
+}
 }
 
 int grades_add_grade(struct grades *grades,
@@ -115,21 +134,35 @@ int grades_add_grade(struct grades *grades,
                      int id,
                      int grade){
 
+    if (grade>100 || grade<0)
+    {
+        return 1;
+    }
+
     //go over all the students, find student with id "id"  and add a course with the needed data
     struct iterator* current_student_iterator = list_begin(grades->students);
-    struct student* current_student_element; //TODO perhaps replace with void* ?
-    while(current_student_iterator){
+    struct student* current_student_element=list_get(current_student_iterator); //TODO perhaps replace with void* ?
+    while(current_student_iterator && grades!=NULL){
         if ( current_student_element->id == id){
+            struct iterator* current_course_iterator = list_begin(current_student_element->courses);
+            while (current_course_iterator!=NULL){
+
+                if ( !strcmp(list_get(current_course_iterator)->name,name) )
+                    return 1;
+                current_course_iterator = list_next(current_course_iterator);
+            }
+
             struct Course* new_course = course_init(name,grade);
             list_insert(current_student_element->courses,
                         list_end(current_student_element->courses),
                         new_course
-            );
-            break;
+            );//TODO check for segfault
+            return 0;
         }
         current_student_iterator = list_next(current_student_iterator);
         current_student_element = list_get(current_student_iterator);
     }
+    return 1;
 }
 
 
@@ -152,7 +185,8 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 
     //initiate
     struct Student *student = (struct Student*)malloc(sizeof(struct Student));
-    student->name = name;
+    student->name = (char*)malloc(strlen(student->name));
+    strcpy(name,student->name);
     student->id = id;
     student->courses = list_init(course_clone, course_destroy);
 
@@ -167,24 +201,29 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 
     //go over all the students, find student with id "id"  and calc avg
     float avg=0.0;
+    out=NULL;
+    if (!grades) return -1;
     struct iterator* current_student_iterator = list_begin(grades->students);
-    struct student* current_student_element; //TODO perhaps replace with void* ?
+    struct student* current_student_element = list_next(current_course_iterator);
     while(current_student_iterator){
         if ( current_student_element->id == id){
-            size_t num_of_courses = list_size(current_student_element->courses);
+
+            float num_of_courses = (float)list_size(current_student_element->courses);
             struct iterator* current_course_iterator = list_begin(current_student_element->courses);
             while(current_course_iterator){
                 avg += (float)list_get(current_course_iterator)->score;//  TODO error in conversation?
                 current_course_iterator = list_next(current_course_iterator);
             }
-            avg/=num_of_courses;
-            break;
+            out=(char*)malloc(strlen(current_student_element->name));
+            strcpy(current_student_element->name,out);
+            return avg/num_of_courses;
+
         }
         current_student_iterator = list_next(current_student_iterator);
         current_student_element = list_get(current_student_iterator);
     }
 
-    return avg;
+    return -1;
 }
 
 /**
@@ -198,10 +237,10 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
  */
 int grades_print_student(struct grades *grades, int id){
     if (!grades){
-        return NULL;
+        return 1;
     }
     struct iterator* current_student_iterator = list_begin(grades->students);
-    struct student* current_student_element; //TODO perhaps replace with void* ?
+    struct student* current_student_element=list_get(current_student_iterator);
     while(current_student_iterator){
         if ( current_student_element->id == id){
             printf("%s %d:",current_student_element->name,current_student_element->id);
@@ -213,13 +252,15 @@ int grades_print_student(struct grades *grades, int id){
                        list_get(current_course_iterator)->score);
                 current_course_iterator = list_next(current_course_iterator);
             }
+            printf("\n");
            return 0;
         }
         current_student_iterator = list_next(current_student_iterator);
         current_student_element = list_get(current_student_iterator);
     }
-    return NULL;
+    return 1;
 }
+
 int grades_print_all(struct grades *grades){
     //checks
     if(!grades) return 1;

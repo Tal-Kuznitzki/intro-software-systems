@@ -6,13 +6,14 @@
  * grades_print_student
 */
 #include <stdlib.h>
+#include <stdio.h>
 #include "linked-list.h"
 #include <string.h>
 #include "grades.h"
 #include <stdbool.h>
 //#include "liblinked-list.so"
 
-//course is a linkedList that will
+//course is an object with grade and name inside courses linkedlist
 //inside student we have a linked list of courses
 struct Course{
     int score;
@@ -31,27 +32,32 @@ struct Student{
     struct list *courses;// = list_init(student_clone, student_destroy);
 };
 
-struct grades* grades_init(){
-    struct grades *grades = (struct grades*)malloc(sizeof(struct grades));
-    grades->students = list_init(student_clone, student_destroy);
-    return *grades;
+struct Course* course_init( const char *name, const int grade){
+    struct Course *course=malloc(sizeof(struct Course));
+    course->name=(char*)malloc(sizeof(name));
+    strcpy(name,course->name);
+    course->score=grade;
+    return course;
 }
-/**
- * @brief Destroys "grades", de-allocate all memory!
- */
+int course_clone(struct Course *course, struct Course *new_course ) {
+    if (!course) {
+        new_course = NULL;
+        return 1;
+    }
+    new_course = (struct Course*)malloc(sizeof(struct Course));
+    new_course->name = (char*)malloc(strlen(course->name));
+    strcpy(course->name,new_course->name);
+    new_course->score = course->score;
+    return 0;
 
-void grades_destroy(struct grades *grades);
-int student_clone(struct Student *student, struct Student *new_stu);
-void student_destroy(struct Student *student);
-struct Course* course_init( const char *name,  const int grade);
-int course_clone(struct Course *course, struct Course *new_course );
-struct Course* course_destroy(struct Course *course);
-        
 
-void grades_destroy(struct grades *grades){
-    if(grades){
-        list_destroy(grades->students);
-        free(grades);
+}
+void course_destroy(struct Course *course) {
+    if (course){
+        if(course->name){
+            free(course->name);
+        }
+        free(course);
     }
 }
 int student_clone(struct Student *student, struct Student *new_stu){
@@ -89,78 +95,65 @@ void student_destroy(struct Student *student){
         free(student);
     }
 }
+struct grades* grades_init(){
+    // (struct grades*) casting removed !?
+    struct grades *grades = malloc(sizeof(struct grades)); //TODO room for error?
+    grades->students = list_init(student_clone, student_destroy);
+    return grades;
+}
 /**
- * @brief Prints all students in "grade", in the following format:
- * STUDENT-1-NAME STUDENT-1-ID: COURSE-1-NAME COURSE-1-GRADE, [...]
- * STUDENT-2-NAME STUDENT-2-ID: COURSE-1-NAME COURSE-1-GRADE, [...]
- * @returns 0 on success
- * @note Fails if "grades" is invalid
- * @note The students should be printed according to the order
- * in which they were inserted into "grades"
- * @note The courses should be printed according to the order
- * in which they were inserted into "grades"
+ * @brief Destroys "grades", de-allocate all memory!
  */
-struct Course* course_init( const char *name,  const int grade){
-       struct Course *course=(struct *course)malloc(sizeof(struct Course));
-       course->name=(char*)malloc(sizeof(name));
-       strcpy(name,course->name);
-       course->score=grade;
-    return course;
-}
-int course_clone(struct Course *course, struct Course *new_course ) {
-    if (!course) {
-        new_course = NULL;
-        return 1;
+void grades_destroy(struct grades *grades){
+    if(grades){ //TODO  bad idea?perhaps also remove each student's courses manunally ?
+        list_destroy(grades->students);
+        free(grades);
     }
-    new_course = (struct Course*)malloc(sizeof(struct Course));
-    new_course->name = (char*)malloc(strlen(course->name));
-    strcpy(course->name,new_course->name);
-    new_course->score = course->score;
-    return 0;
-
-
-}
-struct Course* course_destroy(struct Course *course) {
-if (course){
-    if(course->name){
-        free(course->name);
-    }
-    free(course);
-}
 }
 
 int grades_add_grade(struct grades *grades,
                      const char *name,
                      int id,
                      int grade){
-
-    if (grade>100 || grade<0)
-    {
+    //invaild grade check
+    if (grade>100 || grade<0){
         return 1;
     }
 
     //go over all the students, find student with id "id"  and add a course with the needed data
-    struct iterator* current_student_iterator = list_begin(grades->students);
-    struct student* current_student_element=list_get(current_student_iterator); //TODO perhaps replace with void* ?
+    struct iterator *current_student_iterator = list_begin(grades->students);
+    struct Student *current_student_element;
     while(current_student_iterator && grades!=NULL){
+            current_student_element = list_get(current_student_iterator);
         if ( current_student_element->id == id){
-            struct iterator* current_course_iterator = list_begin(current_student_element->courses);
-            while (current_course_iterator!=NULL){
+            struct iterator *current_course_iterator = list_begin(current_student_element->courses);
+            struct Course *current_course_element;
 
-                if ( !strcmp(list_get(current_course_iterator)->name,name) )
+            //passing over all the courses in student to check if it already exists
+            while (current_course_iterator!=NULL){
+                current_course_element = list_get(current_course_iterator);
+                char* current_course_name = current_course_element->name;
+                if ( !strcmp(current_course_name,name) ){
                     return 1;
+                }
+
+
+
                 current_course_iterator = list_next(current_course_iterator);
             }
 
             struct Course* new_course = course_init(name,grade);
-            list_insert(current_student_element->courses,
-                        list_end(current_student_element->courses),
-                        new_course
-            );//TODO check for segfault
+            //new way of adding course ?
+            list_push_back(current_student_element->courses, new_course);
+            /*  OLD WAY
+ *           list_insert(current_student_element->courses,
+            list_end(current_student_element->courses),
+            new_course
+            );*/
+//TODO check for segfault
             return 0;
         }
         current_student_iterator = list_next(current_student_iterator);
-        current_student_element = list_get(current_student_iterator);
     }
     return 1;
 }
@@ -173,7 +166,7 @@ int grades_add_grade(struct grades *grades,
  * the same "id" already exists in "grades"
  */
 int grades_add_student(struct grades *grades, const char *name, int id){
-    //check: is gardes valid, and does id already exists
+    //check: is grades valid, and does id already exists
     if(!grades) return 1;
     struct iterator *idx = list_begin(grades->students);
     struct Student *temp_stu;
@@ -185,47 +178,59 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 
     //initiate
     struct Student *student = (struct Student*)malloc(sizeof(struct Student));
-    student->name = (char*)malloc(strlen(student->name));
+    student->name = (char*)malloc(strlen(name));
     strcpy(name,student->name);
     student->id = id;
     student->courses = list_init(course_clone, course_destroy);
 
     //add to grades:
-    list_push_back(grades->students, student);
+    //old way - caused segfaults
+    //  list_push_back(grades->students, student);
+
+    // new way does not touch the data?
+    
+    struct iterator *current_student_iterator = list_begin(grades->students);
+    size_t num_of_current_students =list_size(grades->students);
+    for (size_t i = 0; i < num_of_current_students ; ++i) {
+        current_student_iterator=list_next(current_student_iterator);
+    }
+    list_insert(grades->students,current_student_iterator,student);
 
     return 0;
+
 }
-
-
 float grades_calc_avg(struct grades *grades, int id, char **out){
-
     //go over all the students, find student with id "id"  and calc avg
     float avg=0.0;
     out=NULL;
     if (!grades) return -1;
-    struct iterator* current_student_iterator = list_begin(grades->students);
-    struct student* current_student_element = list_next(current_course_iterator);
-    while(current_student_iterator){
-        if ( current_student_element->id == id){
 
-            float num_of_courses = (float)list_size(current_student_element->courses);
-            struct iterator* current_course_iterator = list_begin(current_student_element->courses);
+    struct iterator *current_student_iterator = list_begin(grades->students);
+    struct Student *current_student_element;
+
+    while(current_student_iterator){
+        current_student_element = list_get(current_student_iterator);
+        if ( current_student_element->id == id){
+            size_t num_of_courses = list_size(current_student_element->courses);
+            struct iterator *current_course_iterator = list_begin(current_student_element->courses);
+            size_t total_score=0;
+            int current_grade;
             while(current_course_iterator){
-                avg += (float)list_get(current_course_iterator)->score;//  TODO error in conversation?
+                struct Course *current_course_element = list_get(current_course_iterator);
+                current_grade = current_course_element->score;
+                total_score += current_grade;// TODO error in conversion?
                 current_course_iterator = list_next(current_course_iterator);
             }
-            out=(char*)malloc(strlen(current_student_element->name));
+            //out = (char*)malloc(strlen(current_student_element->name));
             strcpy(current_student_element->name,out);
-            return avg/num_of_courses;
-
+            avg=total_score/num_of_courses;
+            return avg;
         }
         current_student_iterator = list_next(current_student_iterator);
-        current_student_element = list_get(current_student_iterator);
     }
 
     return -1;
 }
-
 /**
  * @brief Prints the courses of the student with "id" in the following format:
  * STUDENT-NAME STUDENT-ID: COURSE-1-NAME COURSE-1-GRADE, [...]
@@ -236,31 +241,47 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
  * in which they were inserted into "grades"
  */
 int grades_print_student(struct grades *grades, int id){
-    if (!grades){
-        return 1;
-    }
+    if (!grades) return 1;
+
     struct iterator* current_student_iterator = list_begin(grades->students);
-    struct student* current_student_element=list_get(current_student_iterator);
+    struct Student* current_student_element;
+
+
     while(current_student_iterator){
+        current_student_element = list_get(current_student_iterator);
+        //if found the student, print data
         if ( current_student_element->id == id){
-            printf("%s %d:",current_student_element->name,current_student_element->id);
+            printf("%s %d:",
+                   current_student_element->name,
+                   current_student_element->id);
             //Loop on courses:
-            struct iterator* current_course_iterator = list_begin(current_student_element->courses);
+            struct iterator* current_course_iterator =list_begin(current_student_element->courses);
+            struct Course *current_course_element;
             while(current_course_iterator){
+                current_course_element = list_get(current_course_iterator);
                 printf("%s %u",
-                       list_get(current_course_iterator)->name,
-                       list_get(current_course_iterator)->score);
+                       current_course_element->name,
+                       current_course_element->score);
                 current_course_iterator = list_next(current_course_iterator);
             }
             printf("\n");
            return 0;
         }
         current_student_iterator = list_next(current_student_iterator);
-        current_student_element = list_get(current_student_iterator);
     }
     return 1;
 }
-
+/**
+ * @brief Prints all students in "grade", in the following format:
+ * STUDENT-1-NAME STUDENT-1-ID: COURSE-1-NAME COURSE-1-GRADE, [...]
+ * STUDENT-2-NAME STUDENT-2-ID: COURSE-1-NAME COURSE-1-GRADE, [...]
+ * @returns 0 on success
+ * @note Fails if "grades" is invalid
+ * @note The students should be printed according to the order
+ * in which they were inserted into "grades"
+ * @note The courses should be printed according to the order
+ * in which they were inserted into "grades"
+ */
 int grades_print_all(struct grades *grades){
     //checks
     if(!grades) return 1;

@@ -3,8 +3,9 @@
  * course destroy
  * grades_calc_avg
  * grades_add_grade
- * grades_print_student
+ * grades_print_stרצudent
 */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "linked-list.h"
@@ -33,9 +34,9 @@ struct Student{
 };
 
 struct Course* course_init( const char *name, const int grade){
-    struct Course *course=malloc(sizeof(struct Course));
+    struct Course *course = (struct Course*)malloc(sizeof(struct Course));
     course->name=(char*)malloc(sizeof(name));
-    strcpy(name,course->name);
+    strcpy(course->name,name);
     course->score=grade;
     return course;
 }
@@ -45,8 +46,8 @@ int course_clone(struct Course *course, struct Course *new_course ) {
         return 1;
     }
     new_course = (struct Course*)malloc(sizeof(struct Course));
-    new_course->name = (char*)malloc(strlen(course->name));
-    strcpy(course->name,new_course->name);
+    new_course->name = (char*)malloc((strlen(course->name)+1)*sizeof(char));
+    strcpy(new_course->name,course->name);
     new_course->score = course->score;
     return 0;
 
@@ -69,7 +70,7 @@ int student_clone(struct Student *student, struct Student *new_stu){
 
     //initiate and copy non-list types
     new_stu = (struct Student*)malloc(sizeof(struct Student));
-    new_stu->name = (char*)malloc(strlen(student->name));
+    new_stu->name = (char*)malloc(strlen((student->name)+1)*sizeof(char));
     strcpy(new_stu->name,student->name);
     new_stu->id = student->id;
     new_stu->courses = list_init(course_clone, course_destroy);
@@ -82,10 +83,11 @@ int student_clone(struct Student *student, struct Student *new_stu){
         list_push_back(new_stu->courses, temp_course);
         list_next(idx);
     }
-    free(idx);
+    //free(idx);
 
     return 0;
 }
+
 void student_destroy(struct Student *student){
     if(student){
         if(student->name){
@@ -178,14 +180,17 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 
     //initiate
     struct Student *student = (struct Student*)malloc(sizeof(struct Student));
-    student->name = (char*)malloc(strlen(name));
-    strcpy(name,student->name);
+    student->name = (char*)malloc((strlen(name)+1)*sizeof(char));
+    strcpy(student->name, name);
     student->id = id;
     student->courses = list_init(course_clone, course_destroy);
 
+
     //add to grades:
     //old way - caused segfaults
-    //  list_push_back(grades->students, student);
+    //if(list_push_back(grades->students, student)) printf("pushback unsuccesful");
+    //printf("%s\n", name);
+    //printf("%s\n", student->name);
 
     // new way does not touch the data?
     
@@ -195,6 +200,12 @@ int grades_add_student(struct grades *grades, const char *name, int id){
         current_student_iterator=list_next(current_student_iterator);
     }
     list_insert(grades->students,current_student_iterator,student);
+    
+    //printf("%s\n", list_get(current_student_iterator)->name);
+    //printf("%d\n", list_get(current_student_iterator)->id);
+
+   //free student, list has a copy
+   student_destroy(student);
 
     return 0;
 
@@ -221,8 +232,8 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
                 total_score += current_grade;// TODO error in conversion?
                 current_course_iterator = list_next(current_course_iterator);
             }
-            //out = (char*)malloc(strlen(current_student_element->name));
-            strcpy(current_student_element->name,out);
+            out = (char*)malloc((strlen(current_student_element->name)+1)*sizeof(char));
+            strcpy(out, current_student_element->name);
             avg=total_score/num_of_courses;
             return avg;
         }
@@ -250,7 +261,7 @@ int grades_print_student(struct grades *grades, int id){
     while(current_student_iterator){
         current_student_element = list_get(current_student_iterator);
         //if found the student, print data
-        if ( current_student_element->id == id){
+        if ( current_student_element && current_student_element->id == id){
             printf("%s %d:",
                    current_student_element->name,
                    current_student_element->id);
@@ -267,8 +278,10 @@ int grades_print_student(struct grades *grades, int id){
             printf("\n");
            return 0;
         }
+        printf("nope (inside loop)\n");
         current_student_iterator = list_next(current_student_iterator);
     }
+    printf("very nope (outside loop)\n");
     return 1;
 }
 /**

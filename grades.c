@@ -148,6 +148,7 @@ int grades_add_grade(struct grades *grades,
             struct Course* new_course = course_init(name,grade);
             //new way of adding course ?
             list_push_back(current_student_element->courses, new_course);
+            course_destroy(new_course);
             /*  OLD WAY
  *           list_insert(current_student_element->courses,
             list_end(current_student_element->courses),

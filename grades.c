@@ -335,7 +335,7 @@ int grades_print_student(struct grades *grades, int id){
         current_student_element = list_get(current_student_iterator);
         //if found the student, print data
         if ( current_student_element && current_student_element->id == id){
-            printf("%s %d: ",
+            printf("%s %d:",
                    current_student_element->name,
                    current_student_element->id);
             //Loop on courses:
@@ -346,12 +346,12 @@ int grades_print_student(struct grades *grades, int id){
 
                 current_course_iterator = list_next(current_course_iterator);
                 if (current_course_iterator){
-                    printf("%s %u, ",
+                    printf(" %s %u,",
                            current_course_element->name,
                            current_course_element->score);
                 }
                 else{
-                    printf("%s %u",
+                    printf(" %s %u",
                            current_course_element->name,
                            current_course_element->score);
                 }

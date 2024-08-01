@@ -1,2 +1,4 @@
 add-student juha 1003
+add-student joja 2001
 print-student 1003
+print-student 2001

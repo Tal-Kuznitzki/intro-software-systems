@@ -272,7 +272,7 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 
 */
 
-
+    printf("amount of students after addition %ld \n", list_size(grades->students));
     return 0;
 
 }
@@ -285,12 +285,14 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
     struct iterator *current_student_iterator = list_begin(grades->students);
     struct Student *current_student_element;
 
+
+
     while(current_student_iterator){
         current_student_element = list_get(current_student_iterator);
         if ( current_student_element->id == id){
             size_t num_of_courses = list_size(current_student_element->courses);
             struct iterator *current_course_iterator = list_begin(current_student_element->courses);
-            size_t total_score=0;
+            int total_score=0;
             int current_grade;
             while(current_course_iterator){
                 struct Course *current_course_element = list_get(current_course_iterator);
@@ -298,9 +300,9 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
                 total_score += current_grade;// TODO error in conversion?
                 current_course_iterator = list_next(current_course_iterator);
             }
-            out = (char*)malloc((strlen(current_student_element->name)+1)*sizeof(char));
-            strcpy(out, current_student_element->name);
-            avg=total_score/num_of_courses;
+            *out = (char*)malloc((strlen(current_student_element->name)+1)*sizeof(char));
+            strcpy(*out, current_student_element->name);
+            avg=(size_t)total_score/num_of_courses;
             return avg;
         }
         current_student_iterator = list_next(current_student_iterator);
@@ -344,10 +346,10 @@ int grades_print_student(struct grades *grades, int id){
             printf("\n");
            return 0;
         }
-        printf("nope (inside loop)\n");
+       // printf("nope (inside loop)\n");
         current_student_iterator = list_next(current_student_iterator);
     }
-    printf("very nope (outside loop)\n");
+   // printf("very nope (outside loop)\n");
     return 1;
 }
 /**

@@ -40,15 +40,15 @@ struct Course* course_init( const char *name, const int grade){
     course->score=grade;
     return course;
 }
-int course_clone(struct Course *course, struct Course *new_course ) {
+int course_clone(struct Course *course, struct Course **new_course ) {
     if (!course) {
-        new_course = NULL;
+        *new_course = NULL;
         return 1;
     }
-    new_course = (struct Course*)malloc(sizeof(struct Course));
-    new_course->name = (char*)malloc((strlen(course->name)+1)*sizeof(char));
-    strcpy(new_course->name,course->name);
-    new_course->score = course->score;
+    *new_course = (struct Course*)malloc(sizeof(struct Course));
+    (*new_course)->name = (char*)malloc((strlen(course->name)+1)*sizeof(char));
+    strcpy((*new_course)->name,course->name);
+    (*new_course)->score = course->score;
     return 0;
 
 
@@ -61,14 +61,15 @@ void course_destroy(struct Course *course) {
         free(course);
     }
 }
-int student_clone(struct Student *student, struct Student *new_stu){
+int student_clone(struct Student *student, struct Student **output){
     //checks
     if(!student){
-        new_stu = NULL;
+        *output = NULL;
         return 1;
     }
 
     //initiate and copy non-list types
+    struct Student *new_stu;
     new_stu = (struct Student*)malloc(sizeof(struct Student));
     new_stu->name = (char*)malloc(strlen((student->name)+1)*sizeof(char));
     strcpy(new_stu->name,student->name);
@@ -83,6 +84,7 @@ int student_clone(struct Student *student, struct Student *new_stu){
         list_push_back(new_stu->courses, temp_course);
         list_next(idx);
     }
+    *output=new_stu;
     //free(idx);
 
     return 0;
@@ -187,25 +189,89 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 
 
     //add to grades:
-    //old way - caused segfaults
-    //if(list_push_back(grades->students, student)) printf("pushback unsuccesful");
-    //printf("%s\n", name);
-    //printf("%s\n", student->name);
+    if(list_push_back(grades->students, student)) printf("pushback unsuccesful");
+    printf("%s\n", name);
+    printf("%s\n", student->name);
 
     // new way does not touch the data?
-    
+
+    /*
     struct iterator *current_student_iterator = list_begin(grades->students);
     size_t num_of_current_students =list_size(grades->students);
     for (size_t i = 0; i < num_of_current_students ; ++i) {
         current_student_iterator=list_next(current_student_iterator);
     }
     list_insert(grades->students,current_student_iterator,student);
-    
+    */
+
     //printf("%s\n", list_get(current_student_iterator)->name);
     //printf("%d\n", list_get(current_student_iterator)->id);
 
    //free student, list has a copy
    student_destroy(student);
+
+
+
+  /* LLALALL
+    //check: is grades valid, and does id already exists
+
+    printf("testing");
+    if(!grades) return 1;
+
+    struct iterator *idx = list_begin(grades->students);
+    struct Student *temp_stu;
+    while(idx != NULL){
+        temp_stu = list_get(idx);
+        if(temp_stu->id == id) return 1;
+        idx = list_next(idx);
+    }
+
+    //initiate
+    struct Student *student = malloc(sizeof(struct Student));
+    student->name = (char*)malloc((strlen(name)+1)*sizeof(char));
+    strcpy(student->name, name);
+    student->id = id;
+    student->courses = list_init(course_clone, course_destroy);
+
+
+    printf("list size is:  %ld before insert\n", list_size(grades->students) );
+
+    printf("element to insert DATA\n");
+    printf("%d\n", student->id);
+    printf("%s\n", student->name);
+
+    //add to grades:
+    //old way - caused segfaults
+    /// assuming addition is successful
+    struct iterator *current_student_iterator = list_begin(grades->students);
+
+    if (current_student_iterator==NULL){
+        printf("current_student_iterator is NULL\n");
+        if(list_push_back(grades->students, student)) printf("pushback unsuccesful!\n");
+    }
+    else{
+        printf("current_student_iterator is GOOD!!!\n");
+        int num_of_current_students = (int)list_size(grades->students);
+        for (int i = 0; i < num_of_current_students ; ++i) {
+            current_student_iterator=list_next(current_student_iterator);
+        }
+        list_insert(grades->students,current_student_iterator,student);
+    }
+
+
+    printf("list size is:  %ld (after insert)\n", list_size(grades->students) );
+
+    //printf("%s\n", list_get(current_student_iterator)->name);
+    //printf("%d\n", list_get(current_student_iterator)->id);
+
+    //free student, list has a copy
+    free(student->name);
+    free(student);
+    //  student_destroy(student);
+
+
+*/
+
 
     return 0;
 

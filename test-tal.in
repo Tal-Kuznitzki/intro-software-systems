@@ -2,3 +2,13 @@ add-student juha 1003
 add-student joja 2001
 print-student 1003
 print-student 2001
+add-grade 1000 asdads 95
+add-grade 1003 CALCULUS 53
+add-grade 1003 algerbra 50
+calc-avg  1003 
+calc-avg  2001
+add-grade 2001 fields 55
+calc-avg  2001
+print-student 1003
+print-student 2001 
+print-all

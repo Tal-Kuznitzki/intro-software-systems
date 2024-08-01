@@ -190,8 +190,8 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 
     //add to grades:
     if(list_push_back(grades->students, student)) printf("pushback unsuccesful");
-    printf("%s\n", name);
-    printf("%s\n", student->name);
+  //  printf("%s\n", name);
+   // printf("%s\n", student->name);
 
     // new way does not touch the data?
 
@@ -272,13 +272,13 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 
 */
 
-    printf("amount of students after addition %ld \n", list_size(grades->students));
+   // printf("amount of students after addition %ld \n", list_size(grades->students));
     return 0;
 
 }
 float grades_calc_avg(struct grades *grades, int id, char **out){
     //go over all the students, find student with id "id"  and calc avg
-    float avg=0.0;
+    float avg=0;
     *out=NULL;
     if (!grades) return -1;
 
@@ -305,7 +305,8 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
             }
             *out = (char*)malloc((strlen(current_student_element->name)+1)*sizeof(char));
             strcpy(*out, current_student_element->name);
-            avg = ((size_t)total_score/num_of_courses);
+
+            avg = (float)total_score/(float)num_of_courses;
             //free(*out);
             return avg;
         }
@@ -375,7 +376,7 @@ int grades_print_all(struct grades *grades){
     struct Student *temp;
     while(idx != NULL){
         temp = list_get(idx);
-        if(!grades_print_student(grades, temp->id)) return 1;
+        if(grades_print_student(grades, temp->id)) return 1;
         idx = list_next(idx);
     }
 

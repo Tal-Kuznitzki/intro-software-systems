@@ -3,7 +3,7 @@
  * course destroy
  * grades_calc_avg
  * grades_add_grade
- * grades_print_stרצudent
+ * grades_print_udent
 */
 
 #include <stdlib.h>
@@ -67,7 +67,6 @@ int student_clone(struct Student *student, struct Student **output){
         *output = NULL;
         return 1;
     }
-
     //initiate and copy non-list types
     struct Student *new_stu;
     new_stu = (struct Student*)malloc(sizeof(struct Student));
@@ -78,9 +77,9 @@ int student_clone(struct Student *student, struct Student **output){
 
     //copy courses
     struct iterator* idx = list_begin(student->courses);
-    struct Course *temp_course;
+    struct Course *temp_course=0;
     while(idx != NULL){
-        course_clone(list_get(idx), temp_course);
+        course_clone(list_get(idx), &temp_course);
         list_push_back(new_stu->courses, temp_course);
         list_next(idx);
     }

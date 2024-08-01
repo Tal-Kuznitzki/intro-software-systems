@@ -342,10 +342,20 @@ int grades_print_student(struct grades *grades, int id){
             struct Course *current_course_element;
             while(current_course_iterator){
                 current_course_element = list_get(current_course_iterator);
-                printf("%s %u",
-                       current_course_element->name,
-                       current_course_element->score);
+
                 current_course_iterator = list_next(current_course_iterator);
+                if (current_course_iterator){
+                    printf("%s %u, ",
+                           current_course_element->name,
+                           current_course_element->score);
+                }
+                else{
+                    printf("%s %u",
+                           current_course_element->name,
+                           current_course_element->score);
+                }
+
+
             }
             printf("\n");
            return 0;

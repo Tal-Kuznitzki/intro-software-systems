@@ -35,7 +35,7 @@ struct Student{
 
 struct Course* course_init( const char *name, const int grade){
     struct Course *course = (struct Course*)malloc(sizeof(struct Course));
-    course->name=(char*)malloc(sizeof(name));
+    course->name=(char*)malloc((strlen(name)+1)*sizeof(char));//TODO CHECK!!!!!!!!!!!
     strcpy(course->name,name);
     course->score=grade;
     return course;
@@ -109,7 +109,7 @@ struct grades* grades_init(){
  * @brief Destroys "grades", de-allocate all memory!
  */
 void grades_destroy(struct grades *grades){
-    if(grades){ //TODO  bad idea?perhaps also remove each student's courses manunally ?
+    if(grades){ //TODO  perhaps also remove each student's courses manunally ?
         list_destroy(grades->students);
         free(grades);
     }
@@ -278,7 +278,7 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 }
 float grades_calc_avg(struct grades *grades, int id, char **out){
     //go over all the students, find student with id "id"  and calc avg
-    float avg=0;
+    float avg;
     *out=NULL;
     if (!grades) return -1;
 
@@ -290,13 +290,14 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 
 
         if ( current_student_element->id == id){
-            size_t num_of_courses=0;
-            num_of_courses = list_size(current_student_element->courses);
-            if (num_of_courses==NULL || num_of_courses==0 ) return -1;
-
+          //  size_t num_of_courses=0;
+            size_t num_of_courses = list_size(current_student_element->courses);
             struct iterator *current_course_iterator = list_begin(current_student_element->courses);
-            int total_score=0;
-            int current_grade=0;
+/*            if (num_of_courses==NULL || num_of_courses==0 ) {
+                current_course_iterator=0;
+            }*/
+            int total_score = 0;
+            int current_grade = 0;
             while(current_course_iterator){
                 struct Course *current_course_element = list_get(current_course_iterator);
                 current_grade = current_course_element->score;
@@ -305,8 +306,7 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
             }
             *out = (char*)malloc((strlen(current_student_element->name)+1)*sizeof(char));
             strcpy(*out, current_student_element->name);
-
-            avg = (float)total_score/(float)num_of_courses;
+            avg = (num_of_courses) ? (((float)total_score)/((float)num_of_courses)) : 0.00;
             //free(*out);
             return avg;
         }
@@ -335,7 +335,7 @@ int grades_print_student(struct grades *grades, int id){
         current_student_element = list_get(current_student_iterator);
         //if found the student, print data
         if ( current_student_element && current_student_element->id == id){
-            printf("%s %d:",
+            printf("%s %d: ",
                    current_student_element->name,
                    current_student_element->id);
             //Loop on courses:

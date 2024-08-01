@@ -279,30 +279,34 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 float grades_calc_avg(struct grades *grades, int id, char **out){
     //go over all the students, find student with id "id"  and calc avg
     float avg=0.0;
-    out=NULL;
+    *out=NULL;
     if (!grades) return -1;
 
     struct iterator *current_student_iterator = list_begin(grades->students);
     struct Student *current_student_element;
 
-
-
     while(current_student_iterator){
         current_student_element = list_get(current_student_iterator);
+
+
         if ( current_student_element->id == id){
-            size_t num_of_courses = list_size(current_student_element->courses);
+            size_t num_of_courses=0;
+            num_of_courses = list_size(current_student_element->courses);
+            if (num_of_courses==NULL || num_of_courses==0 ) return -1;
+
             struct iterator *current_course_iterator = list_begin(current_student_element->courses);
             int total_score=0;
-            int current_grade;
+            int current_grade=0;
             while(current_course_iterator){
                 struct Course *current_course_element = list_get(current_course_iterator);
                 current_grade = current_course_element->score;
-                total_score += current_grade;// TODO error in conversion?
+                total_score += current_grade;
                 current_course_iterator = list_next(current_course_iterator);
             }
             *out = (char*)malloc((strlen(current_student_element->name)+1)*sizeof(char));
             strcpy(*out, current_student_element->name);
-            avg=(size_t)total_score/num_of_courses;
+            avg = ((size_t)total_score/num_of_courses);
+            //free(*out);
             return avg;
         }
         current_student_iterator = list_next(current_student_iterator);

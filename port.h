@@ -4,7 +4,7 @@
 
 #ifndef PORT_H
 #define PORT_H
-
+#include "generic-field.h"
 
 
 class Port : public GenericField{

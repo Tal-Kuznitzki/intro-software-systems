@@ -12,6 +12,7 @@
     rule example ” dst-port =  3-12
 
  */
+#include "string.h"
 #include "port.h"
 #define NUM_OF_FIELDS 4
 class Port : public GenericField{

@@ -16,15 +16,18 @@ firewall.exe: firewall.o libfirewall.so libinput.so
 firewall.o: main.cpp
 	$(CXX)  $(CXXFLAGS) -c -fpic main.cpp -o firewall.o
 #port
-port.o: port.cpp port.h
+port.o: port.cpp port.h generic-field.h
 	$(CXX)  $(CXXFLAGS) -c -fpic port.cpp -o port.o
 #ip
-ip.o: ip.cpp ip.h
+ip.o: ip.cpp ip.h generic-field.h
 	$(CXX)  $(CXXFLAGS) -c -fpic ip.cpp -o ip.o
 #string
-string.o: string.cpp string.h
+string.o: string.cpp string.h generic-string.h string-array.h
 	$(CXX)  $(CXXFLAGS) -c -fpic string.cpp -o string.o
 
+#stringArr
+string-array.o: string-array.cpp string.h generic-string.h string-array.h
+	$(CXX)  $(CXXFLAGS) -c -fpic string-array.cpp -o string-array.o
 
 
 #cleanup

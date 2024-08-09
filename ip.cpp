@@ -9,6 +9,7 @@
     rule example ” dst-ip=122.128.68.0/27
 
  */
+#include "string.h"
 #include "ip.h"
 #define NUM_OF_FIELDS 4
 #define NUM_OF_OCTATES 4

@@ -4,7 +4,7 @@
 
 #ifndef PORT_H
 #define PORT_H
-#endif //PORT_H
+
 
 
 class Port : public GenericField{
@@ -14,10 +14,11 @@ private:
     short highRangeNumber;
 public:
     Port(String type_of_port, short lowRangeNumber,short highRangeNumber);
-    Port(const Port& other_port); //copy
+    Port(const Port &other_port); //copy
     bool match(const GenericString &packet);
     ~Port();
 
 
 
 };
+#endif //PORT_H

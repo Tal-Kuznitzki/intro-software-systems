@@ -4,7 +4,7 @@
 
 #ifndef IP_H
 #define IP_H
-#endif //IP_H
+
 
 
 class Ip : public GenericField {
@@ -13,7 +13,7 @@ private:
     String ip;
 public:
     Ip(String type_of_ip,String);
-    Ip(const Ip& other_ip); //copy
+    Ip(const Ip &other_ip); //copy
     int ipToIntAndMask(String ipAddress,unsigned int mask);
     bool match(const GenericString &packet);
     ~Ip();
@@ -21,3 +21,4 @@ public:
 
 
 };
+#endif //IP_H

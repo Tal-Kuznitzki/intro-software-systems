@@ -8,10 +8,6 @@
 *
  * in herer we first parse the rule,
  * then call for the needed class and then iterate on the entries in the .txt file
- *
- *
- *
- *
 */
 
 #include "ip.h"
@@ -82,4 +78,6 @@ parse_input(obj);
 
 delete obj
 delete rule;
+
+
 }

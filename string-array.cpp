@@ -1,39 +1,26 @@
 #include "string-array.h"
-#include "string.h"
-#include <vector>
-#include <iostream>
 
-using std::vector;
+// using std::vector;
 
+StringArray::StringArray() = default;
 
-class StringArray{
-        
-        vector<GenericString*> str_arr;
+int StringArray::get_size(){
+    return this->str_arr.size();
+}
 
-    public:
+//add string, resize if needed
+void StringArray::add_str(GenericString* str){
+    this->str_arr.push_back(str);
+}
 
-        StringArray() = default;
-
-        int get_size(){
-            return str_arr.size();
-        }
-
-        //add string, resize if needed
-        void add_str(GenericString* str){
-            str_arr.push_back(str);
-        }
-
-        //can access specific string using []
-        GenericString* operator[](int index) {
-        if (index < str_arr.size()) {
-            return str_arr[index];
-        }
-        //false statement handle needed?
-    }
+//can access specific string using []
+GenericString* StringArray::operator[](int index) {
+    return this->str_arr[index];
+}
 
 
-        ~StringArray() = default;
-};
+StringArray::~StringArray() {};
+
 
 /* //small test
 int main() {

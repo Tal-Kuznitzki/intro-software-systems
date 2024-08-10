@@ -15,26 +15,29 @@
 #include "string.h"
 #include "port.h"
 #define NUM_OF_FIELDS 4
-class Port : public GenericField{
-private:
-    String type_of_port; //should be "src-port" || "dest-port"
-    short lowRangeNumber;
-    short highRangeNumber;
-public:
+
+
+
+
+//private:
+   // String type_of_port; //should be "src-port" || "dest-port"
+  //  short lowRangeNumber;
+ //   short highRangeNumber;
+//public:
     //constructor
-    Port(String type_of_port, short lowRangeNumber,short highRangeNumber){
+Port::Port(String type_of_port, short lowRangeNumber,short highRangeNumber){
         this->type_of_port = type_of_port;
         this->highRangeNumber = highRangeNumber;
         this->lowRangeNumber = lowRangeNumber;
     }
     //copy constructor
-    Port(const Port &other_port){
+Port::Port(const Port &other_port){
         this->type_of_port =  other_port.type_of_port;
         this->lowRangeNumber =  other_port.lowRangeNumber;
         this->highRangeNumber =  other_port.highRangeNumber;
     }
     //match overloading
-    bool match(const GenericString &packet){
+bool Port::match(const GenericString &packet){
         bool retVal = false ;
         packet.trim();
         StringArray packet_divided = packet.split(",");
@@ -59,8 +62,8 @@ public:
 
 
     }
-    ~Port(){}
-};
+Port::~Port(){}
+
 
 
 

@@ -15,24 +15,27 @@
 #define NUM_OF_OCTATES 4
 #define IP_OCTATE_SIZE 8
 
-class Ip : public GenericField {
-private:
-    String type_of_ip; //should be "src-ip" || "dest-ip"
-    String ip;
 
-protected:
+
+//private:
+ //   String type_of_ip; //should be "src-ip" || "dest-ip"
+ //   String ip;
+
+//protected:
     //constructor
-    Ip(String type_of_ip,String ip){
+
+Ip::Ip(String type_of_ip,String ip){
         this->type_of_ip = type_of_ip ; //src-ip || dst-ip
         this->ip = ip ; // EXAMPLE 255.64.1.1/15
-    }
+    };
     //copy constructor
-    Ip(const Ip &other_ip){
+Ip::Ip(const Ip &other_ip){
         this->type_of_ip =  other_ip.type_of_ip;
         this->ip =  other_ip.ip;
-    }
-    int ipToIntAndMask(String ipAddress,unsigned int mask){
-        ipAddress=ipAddress.trim(); //just in case
+    };
+int Ip::ipToIntAndMask(String ipAddress,unsigned int mask){
+
+        ipAddress.trim(); //just in case
         StringArray ipByOctate = ipAddress.split(".");
         int ipAddressINT = 0;
         String octate = "" ;
@@ -47,7 +50,7 @@ protected:
         return (ipAddressINT & mask) ;
     }
     //match overloading
-    bool match(const GenericString &packet){
+bool Ip:: match(const GenericString &packet){
         bool retVal = false ;
         //firewalled accepted ip-addresses calculations
         StringArray ip_divided  = (this->ip).split("/"); //split  122.0.0.0/15 into  0: 122.0.0.0     1:  15
@@ -113,8 +116,8 @@ protected:
 
 
     }
-    ~Ip(){}//destructor
-};
+Ip::~Ip(){}//destructor
+
 
 
 

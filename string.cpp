@@ -21,9 +21,8 @@ StringArray String::split(const char *delimiters) const {
     while(substr){
         arr.add_str(make_string(substr));
         substr = strtok(NULL, delimiters);
-        delete make_string(substr); //TODO TEST !
     }
-    delete copy;
+    free(copy);
     return arr;
 }
 

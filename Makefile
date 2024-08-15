@@ -1,13 +1,13 @@
 CXX=g++
 CXXFLAGS=-g -Wall 
-OBJS=ip.o port.o string.o
+OBJS=ip.o port.o string.o string-array.o
 EXEC=firewall.exe
 RM=rm -rf
 
 
 
 #excutable
-firewall.exe: firewall.o libfirewall.so 
+firewall.exe: firewall.o libfirewall.so
 	$(CXX)  $(CXXFLAGS) firewall.o -o firewall.exe   -lfirewall   -linput  -L.
 #library
 libfirewall.so: $(OBJS)
@@ -32,4 +32,4 @@ string-array.o: string-array.cpp string.h generic-string.h string-array.h
 
 #cleanup
 clean:
-	$(RM) *.o *.so $(EXEC) 
+	$(RM) *.o firewall.so $(EXEC)

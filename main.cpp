@@ -17,6 +17,7 @@
 #include "generic-field.h"
 #include "generic-string.h"
 #include "input.h"
+#include "string-array.h"
 //old main
 /**
 int main(int argc,char **argv) {

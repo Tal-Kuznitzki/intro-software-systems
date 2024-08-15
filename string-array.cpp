@@ -19,7 +19,11 @@ GenericString* StringArray::operator[](int index) {
 }
 
 
-StringArray::~StringArray() {};
+StringArray::~StringArray() { 
+        for(int i=0; i<this->get_size(); i++){
+            delete str_arr[i];
+        }
+    };
 
 
 /* //small test

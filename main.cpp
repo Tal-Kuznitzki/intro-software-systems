@@ -64,7 +64,7 @@ if ( componentType == port_str ){
     obj = new Port(category,lowerLim,upperLim)
 
 
-     //* old way
+     / old way
     //port portObj(RouteType,lowerLim,upperLim);
     //parse_input(&portObj);
 
@@ -154,7 +154,6 @@ int main(int argc,char **argv) {
         for (int i = 0; i <rules_divided.get_size() ; ++i) {
             delete rules_divided[i];
         }
-        delete ip_str
         delete &rule;
     }
 }

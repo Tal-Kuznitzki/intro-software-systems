@@ -34,13 +34,13 @@ Ip::Ip(const Ip &other_ip){
     };
 int Ip::ipToIntAndMask(String ipAddress,unsigned int mask) const {
 
-        ipAddress.trim(); //just in case
+        ipAddress.trim().as_string(); //just in case
         StringArray ipByOctate = ipAddress.split(".");
         int ipAddressINT = 0;
         String octate = "" ;
         int octateINT = 0  ;
         int ShftLftBy = 0  ;
-        for (int i = 0; i <NUM_OF_OCTATES ; ++i) {
+        for (int i = 0; i <ipByOctate.get_size() ; ++i) {
             octate = ipByOctate[i]->as_string();
             octateINT = octate.to_integer();
             ShftLftBy =( (3-i)*IP_OCTATE_SIZE ) ;

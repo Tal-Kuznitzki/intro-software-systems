@@ -20,7 +20,7 @@ for rule in $rules; do
         temp=$(echo $temp|./firewall.exe $field)
         # echo $field
     done
-    ourput+=$temp"\n"
+    output+=$temp"\n"
 done
 
 echo -e $output|sort|uniq

@@ -32,7 +32,7 @@ Ip::Ip(const Ip &other_ip){
         this->type_of_ip =  other_ip.type_of_ip;
         this->ip =  other_ip.ip;
     };
-int Ip::ipToIntAndMask(String ipAddress,unsigned int mask){
+int Ip::ipToIntAndMask(String ipAddress,unsigned int mask) const {
 
         ipAddress.trim(); //just in case
         StringArray ipByOctate = ipAddress.split(".");

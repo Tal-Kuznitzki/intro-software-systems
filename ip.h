@@ -14,7 +14,7 @@ private:
 public:
     Ip(String type_of_ip,String ip);
     Ip(const Ip &other_ip); //copy
-    int ipToIntAndMask(String ipAddress,unsigned int mask);
+    int ipToIntAndMask(String ipAddress,unsigned int mask) const ;
     bool match(const GenericString &packet) const ;
     ~Ip();
 

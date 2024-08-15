@@ -7,7 +7,7 @@ RM=rm -rf
 
 
 #excutable
-firewall.exe: firewall.o libfirewall.so libinput.so
+firewall.exe: firewall.o libfirewall.so 
 	$(CXX)  $(CXXFLAGS) firewall.o -o firewall.exe   -lfirewall   -linput  -L.
 #library
 libfirewall.so: $(OBJS)

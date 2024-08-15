@@ -34,7 +34,7 @@ Ip::Ip(const Ip &other_ip){
     };
 int Ip::ipToIntAndMask(String ipAddress,unsigned int mask) const {
 
-        ipAddress.trim().as_string(); //just in case
+        ipAddress.trim(); //just in case
         StringArray ipByOctate = ipAddress.split(".");
         int ipAddressINT = 0;
         String octate = "" ;

@@ -64,7 +64,7 @@ if ( componentType == port_str ){
     obj = new Port(category,lowerLim,upperLim)
 
 
-     / old way
+     //* old way
     //port portObj(RouteType,lowerLim,upperLim);
     //parse_input(&portObj);
 
@@ -98,25 +98,25 @@ int main(int argc,char **argv) {
     }
     else {
     String rule = argv[1];
-    // rule = *(rule.trim()); // TODO check
-   // rule.trim();
+    // rule = *(rule.trim()); // ?
+    rule.trim();
     StringArray rules_divided=rule.split("=");
 
 //for example will be  "dst-port"
         String category = rules_divided[0]->as_string(); //TODO: match implementation of StringArray
-        category.trim().as_string();
+        category.trim();
         StringArray category_divided=category.split("-");
         String RouteType = category_divided[0]->as_string(); //will be src/dst NOT NEEDED ?
         String componentType = category_divided[1]->as_string(); //will be "port/ip"
         //will be the range "22-22"
         String limits=rules_divided[1]->as_string(); //TODO: match implementation of StringArray
-        limits.trim().as_string();
+        limits.trim();
 
         StringArray limits_divided=limits.split("-");
         String lowerLimStr=limits_divided[0]->as_string();// getting the lower limit
         String upperLimStr=limits_divided[1]->as_string(); //getting the higher limit
-        lowerLimStr.trim().as_string();
-        upperLimStr.trim().as_string();
+        lowerLimStr.trim();
+        upperLimStr.trim();
         short lowerLim = (short) lowerLimStr.to_integer();
         short upperLim = (short) upperLimStr.to_integer();
 
@@ -145,15 +145,5 @@ int main(int argc,char **argv) {
         }
       //  parse_input(obj);
       //  delete obj;
-        for (int i = 0; i <category_divided.get_size() ; ++i) {
-            delete category_divided[i];
-        }
-        for (int i = 0; i <limits_divided.get_size() ; ++i) {
-            delete limits_divided[i];
-        }
-        for (int i = 0; i <rules_divided.get_size() ; ++i) {
-            delete rules_divided[i];
-        }
-        delete &rule;
     }
 }

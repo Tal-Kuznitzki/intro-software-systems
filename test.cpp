@@ -38,7 +38,7 @@ int main() {
 
     for(int i=0; i<arr.get_size(); i++){
         std::cout << "print arr num " << i << " after as_string/" << arr[i]->as_string().to_integer() << "/" << std::endl;
-        delete arr[i];
+        // delete arr[i];
     }
 
     String *str4 = (String*)make_string("394856");

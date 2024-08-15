@@ -69,7 +69,7 @@ bool Ip:: match(const GenericString &packet) const{
         //  (packet.as_string()).trim();
         StringArray packet_divided = packet.split(",");
 
-        for (int i = 0; i < NUM_OF_FIELDS; ++i) {
+        for (int i = 0; i < packet_divided.get_size(); ++i) {
             //passing over the
             // "  src-ip =    XXX.XXX.XXX.XXX ,      dst-ip = YYY.YYY.YYY.YYY , src-port  = PRT,dst-port=PRT         "
 

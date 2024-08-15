@@ -43,7 +43,7 @@ bool Port::match(const GenericString &packet) const {
        // packet->as_string().trim();
         StringArray packet_divided = packet.split(",");
 
-        for (int i = 0; i < NUM_OF_FIELDS; ++i) {
+        for (int i = 0; i < packet_divided.get_size(); ++i) {
             StringArray field_divided = (packet_divided[i])->as_string().split("=");
             // "  src-ip =    XXX.XXX.XXX.XXX ,      dst-ip = YYY.YYY.YYY.YYY , src-port  = PRT,dst-port=PRT         "
             field_divided[0]->as_string().trim().as_string();

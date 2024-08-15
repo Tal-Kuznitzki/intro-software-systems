@@ -48,9 +48,9 @@ String lowerLimStr=limits_divided[0];// getting the lower limit
 String upperLimStr=limits_divided[1]; //getting the higher limit
 
 
-short lowerLim = (short) lowerLim.to_integer;
-short upperLim=(short) upperLimStr.to_integer;
-//TODO check for error in conversion int? to short
+int lowerLim = (int) lowerLim.to_integer;
+int upperLim=(int) upperLimStr.to_integer;
+//TODO check for error in conversion int? to int
 
 //right now we have the limits, the kind and now we should pass over the packets
 // in the .txt file
@@ -116,7 +116,7 @@ int main(int argc,char **argv) {
 
         
 
-//TODO check for error in conversion int? to short
+//TODO check for error in conversion int? to int
 
 //right now we have the limits, the type and now we should pass over the packets
 // in the .txt file
@@ -134,8 +134,8 @@ int main(int argc,char **argv) {
             String upperLimStr=limits_divided[1]->as_string(); //getting the higher limit
             lowerLimStr.trim();
             upperLimStr.trim();
-            short lowerLim = (short) lowerLimStr.to_integer();
-            short upperLim = (short) upperLimStr.to_integer();
+            int lowerLim =  lowerLimStr.to_integer();
+            int upperLim =  upperLimStr.to_integer();
 
             Port portObj(category,lowerLim,upperLim);
             parse_input(portObj);

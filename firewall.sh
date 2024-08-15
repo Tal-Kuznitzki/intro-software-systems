@@ -10,19 +10,29 @@ fi
 rules=$(cat $1 | sed 's/#/\n#/g' | grep -v -e '^#' -e '^$' | sed 's/ //g')
 data=$(cat -)
 output=
-
+# echo -e $data
 # process each rule - OR
 for rule in $rules; do
     fields=$(echo $rule | sed 's/,/ /g')
     # procees each field - AND
     temp=$data
     for field in $fields; do
+        field=$(echo $field| sed 's/ //g' | sed 's/\n//g')
+        if [ -z "$field" ]; then
+            echo "Encountered an empty field, skipping..."
+            continue
+        fi
+        
         temp=$(echo $temp|./firewall.exe $field)
+        # echo $temp | head
+        # temp=$(./firewall.exe $field <&0)
         # echo $field
+        # echo -e $temp
     done
-    # echo -e $temp
+    
     output+=$temp
-    output+="\n"
+    # output+="\n"
+    # echo -e "\n"
 done
 
 echo -e $output|sort|uniq

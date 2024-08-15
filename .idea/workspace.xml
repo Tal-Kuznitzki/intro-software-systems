@@ -17,9 +17,12 @@
   <component name="ChangeListManager">
     <list default="true" id="87658c83-76e3-4aa3-83fa-ba4a3304b37c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ip.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ip.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libinput.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ip.h" beforeDir="false" afterPath="$PROJECT_DIR$/ip.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/port.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/port.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/port.h" beforeDir="false" afterPath="$PROJECT_DIR$/port.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +61,7 @@
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "C:/computerSystemsIntro/SHAREDFOLDER/intro-software-systems",
+    "last_opened_file_path": "C:/computerSystemsIntro/VMSHAREDFOLDER/intro-software-systems",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -84,6 +87,7 @@
       <workItem from="1722883328189" duration="595000" />
       <workItem from="1722988336885" duration="12911000" />
       <workItem from="1723307762909" duration="2942000" />
+      <workItem from="1723713661683" duration="3344000" />
     </task>
     <servers />
   </component>

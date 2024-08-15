@@ -16,7 +16,6 @@
 #define IP_OCTATE_SIZE 8
 
 
-
 //private:
  //   String type_of_ip; //should be "src-ip" || "dest-ip"
  //   String ip;
@@ -42,7 +41,7 @@ int Ip::ipToIntAndMask(String ipAddress,unsigned int mask){
         int octateINT = 0  ;
         int ShftLftBy = 0  ;
         for (int i = 0; i <NUM_OF_OCTATES ; ++i) {
-            octate = ipByOctate[i];
+            octate = ipByOctate[i]->as_string();
             octateINT = octate.to_integer();
             ShftLftBy =( (3-i)*IP_OCTATE_SIZE ) ;
             ipAddressINT+=( octateINT << ( ShftLftBy ) );
@@ -50,32 +49,33 @@ int Ip::ipToIntAndMask(String ipAddress,unsigned int mask){
         return (ipAddressINT & mask) ;
     }
     //match overloading
-bool Ip:: match(const GenericString &packet){
+bool Ip:: match(const GenericString &packet) const{
         bool retVal = false ;
         //firewalled accepted ip-addresses calculations
         StringArray ip_divided  = (this->ip).split("/"); //split  122.0.0.0/15 into  0: 122.0.0.0     1:  15
-        String ip_address = ip_divided[0];
-        ip_address.trim();
+        String ip_address = (ip_divided[0])->as_string();
+        ip_address.trim().as_string();
 
         //generating the subnet-mask:
-        String prefix = ip_divided[1];
-        prefix.trim();
+        String prefix = (ip_divided[1])->as_string();
+        prefix.trim().as_string();
         int prefix_as_int = prefix.to_integer();
         int suffix = ( 32 - prefix_as_int);
         unsigned int mask = -1U <<  suffix ;// -1 unsigned is 0xFFFFFFFF
 
 
         //handling the packet
-        packet.trim(packet);
+        //TODO: maybe trimming is needed
+        //  (packet.as_string()).trim();
         StringArray packet_divided = packet.split(",");
 
         for (int i = 0; i < NUM_OF_FIELDS; ++i) {
             //passing over the
             // "  src-ip =    XXX.XXX.XXX.XXX ,      dst-ip = YYY.YYY.YYY.YYY , src-port  = PRT,dst-port=PRT         "
 
-            StringArray field_divided = packet_divided[i].split("=");
-            String RouteType = (field_divided[0]).trim();
-            String packetIpAddress = (field_divided[1]).trim();
+            StringArray field_divided = packet_divided[i]->as_string().split("=");
+            String RouteType = (field_divided[0])->as_string().trim().as_string();
+            String packetIpAddress = (field_divided[1])->as_string().trim().as_string();
             if ( RouteType==type_of_ip ){ // if field_divided[0] == "src-ip" or "dst-ip" according to "type_of_ip"
                 //   field_divided[1] is the ip of the packet
                 /**

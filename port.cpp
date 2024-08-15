@@ -37,19 +37,20 @@ Port::Port(const Port &other_port){
         this->highRangeNumber =  other_port.highRangeNumber;
     }
     //match overloading
-bool Port::match(const GenericString &packet){
+bool Port::match(const GenericString &packet) const {
         bool retVal = false ;
-        packet.trim();
+        //TODO: test if needed to trim the packet
+       // packet->as_string().trim();
         StringArray packet_divided = packet.split(",");
 
         for (int i = 0; i < NUM_OF_FIELDS; ++i) {
-            StringArray field_divided = (packet_divided[i]).split("=");
+            StringArray field_divided = (packet_divided[i])->as_string().split("=");
             // "  src-ip =    XXX.XXX.XXX.XXX ,      dst-ip = YYY.YYY.YYY.YYY , src-port  = PRT,dst-port=PRT         "
-            field_divided[0].trim();
-            if ( field_divided[0]==type_of_port ){
+            field_divided[0]->as_string().trim().as_string();
+            if ( field_divided[0]->as_string()==type_of_port ){
                 //   field_divided[1] is the port of the packet
-                (field_divided[1]).trim()
-                int packet_port_integer = field_divided[1].to_integer(); //just for testing it is decoupled;
+                (field_divided[1])->as_string().trim().as_string();
+                int packet_port_integer = field_divided[1]->as_string().to_integer(); //just for testing it is decoupled;
                 short packet_port = (short)packet_port_integer;
                 if (  ( this->lowRangeNumber <= packet_port   )&& ( packet_port <= this->highRangeNumber )  ){
                     retVal=true;

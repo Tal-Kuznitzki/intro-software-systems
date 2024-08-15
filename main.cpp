@@ -99,24 +99,24 @@ int main(int argc,char **argv) {
     String rule = argv[1];
     // rule = *(rule.trim()); // ?
     rule.trim();
-    StringArray rules_divided=rule.split('=');
+    StringArray rules_divided=rule.split("=");
 
 //for example will be  "dst-port"
-        String category = rules_divided[0]; //TODO: match implementation of StringArray
+        String category = rules_divided[0]->as_string(); //TODO: match implementation of StringArray
         category.trim();
-        StringArray category_divided=category.split('-');
-        String RouteType = category_divided[0]; //will be src/dst NOT NEEDED ?
-        String componentType = category_divided[1]; //will be "port/ip"
+        StringArray category_divided=category.split("-");
+        String RouteType = category_divided[0]->as_string(); //will be src/dst NOT NEEDED ?
+        String componentType = category_divided[1]->as_string(); //will be "port/ip"
         //will be the range "22-22"
-        String limits=rules_divided[1]; //TODO: match implementation of StringArray
+        String limits=rules_divided[1]->as_string(); //TODO: match implementation of StringArray
         limits.trim();
 
-        StringArray limits_divided=limits.split('-');
-        String lowerLimStr=limits_divided[0];// getting the lower limit
-        String upperLimStr=limits_divided[1]; //getting the higher limit
+        StringArray limits_divided=limits.split("-");
+        String lowerLimStr=limits_divided[0]->as_string();// getting the lower limit
+        String upperLimStr=limits_divided[1]->as_string(); //getting the higher limit
         lowerLimStr.trim();
         upperLimStr.trim();
-        short lowerLim = (short) lowerLim.to_integer();
+        short lowerLim = (short) lowerLimStr.to_integer();
         short upperLim = (short) upperLimStr.to_integer();
 
 //TODO check for error in conversion int? to short
@@ -131,14 +131,16 @@ int main(int argc,char **argv) {
         if ( componentType == port_str ){
             //another way
           //  obj = new Port(category,lowerLim,upperLim);
-            port portObj(category,lowerLim,upperLim);
-            parse_input(&portObj);
+
+            Port portObj(category,lowerLim,upperLim);
+            parse_input(portObj);
         }
         else if ( componentType == ip_str ){
             //another way
             //obj = new Ip(category,lowerLim,upperLim);
-             ip ipObj(category,lowerLim,upperLim);
-            parse_input(&ipObj);
+
+             Ip ipObj(category,rule);
+            parse_input(ipObj);
         }
       //  parse_input(obj);
       //  delete obj;

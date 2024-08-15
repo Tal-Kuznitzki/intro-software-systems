@@ -6,6 +6,7 @@
 #define IP_H
 #endif //IP_H
 #include "generic-field.h"
+#include "string.h"
 class Ip : public GenericField {
 private:
     String type_of_ip; //should be "src-ip" || "dest-ip"
@@ -14,7 +15,7 @@ public:
     Ip(String type_of_ip,String ip);
     Ip(const Ip &other_ip); //copy
     int ipToIntAndMask(String ipAddress,unsigned int mask);
-    bool match(const GenericString &packet);
+    bool match(const GenericString &packet) const ;
     ~Ip();
 
 

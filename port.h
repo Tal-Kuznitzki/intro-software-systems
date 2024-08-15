@@ -10,10 +10,10 @@
 class Port : public GenericField{
 private:
     String type_of_port; //should be "src-port" || "dest-port"
-    short lowRangeNumber;
-    short highRangeNumber;
+    int lowRangeNumber;
+    int highRangeNumber;
 public:
-    Port(String type_of_port, short lowRangeNumber,short highRangeNumber);
+    Port(String type_of_port, int lowRangeNumber,int highRangeNumber);
     Port(const Port &other_port); //copy
     bool match(const GenericString &packet) const ;
     ~Port();

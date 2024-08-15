@@ -25,7 +25,7 @@
  //   short highRangeNumber;
 //public:
     //constructor
-Port::Port(String type_of_port, short lowRangeNumber,short highRangeNumber){
+Port::Port(String type_of_port, int lowRangeNumber,int highRangeNumber){
         this->type_of_port = type_of_port;
         this->highRangeNumber = highRangeNumber;
         this->lowRangeNumber = lowRangeNumber;

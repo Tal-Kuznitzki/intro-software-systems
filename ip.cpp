@@ -25,6 +25,7 @@
     //constructor
 
 Ip::Ip(String type_of_ip,String ip){
+  //  String ip_address = (ip_divided[0])->as_string().trim().as_string();
         this->type_of_ip = type_of_ip ; //src-ip || dst-ip
         this->ip = ip ; // EXAMPLE 255.64.1.1/15
     };
@@ -34,6 +35,7 @@ Ip::Ip(const Ip &other_ip){
         this->ip =  other_ip.ip;
     };
 int Ip::ipToIntAndMask(String ipAddress,unsigned int mask) const {
+        //printf("MASK IS %u",mask);
 
         ipAddress.trim().as_string(); //just in case
         StringArray ipByOctate = ipAddress.split(".");
@@ -43,12 +45,14 @@ int Ip::ipToIntAndMask(String ipAddress,unsigned int mask) const {
         for (int i = 0; i <ipByOctate.get_size() ; i++) {
           //  if(ipByOctate[i]){
                 octateINT = ipByOctate[i]->as_string().to_integer();
-                printf("OCTATATE NUMBER %d is %d\n",i,octateINT);
+             //   printf("OCTATATE NUMBER %d is %d\n",i,octateINT);
                 ShftLftBy =( (3-i)*IP_OCTATE_SIZE ) ;
                 ipAddressINT+=( octateINT << ( ShftLftBy ) );
          //   }
         }
-        printf("DONE");
+       // printf("DONE");
+
+
         return (ipAddressINT & mask) ;
     }
     //match overloading
@@ -56,8 +60,11 @@ bool Ip:: match(const GenericString &packet) const{
         bool retVal = false ;
         //firewalled accepted ip-addresses calculations
         String copy_ip = this->ip;
-        StringArray ip_divided  = (copy_ip).split("/"); //split  122.0.0.0/15 into  0: 122.0.0.0     1:  15
+        StringArray ip_divided  = (copy_ip).split("/");
+
+        //split  122.0.0.0/15 into  0: 122.0.0.0     1:  15
        // if(!ip_divided[0]) ;//std::cout << "\n\n ip_devided 0 \n\n" << std::endl;
+       ///test
         String ip_address = (ip_divided[0])->as_string().trim().as_string();
 
 
@@ -66,9 +73,9 @@ bool Ip:: match(const GenericString &packet) const{
         String prefix = (ip_divided[1])->as_string().trim().as_string();
         prefix.trim().as_string();
         int prefix_as_int = prefix.to_integer();
-        printf("PREFIX: %d\n",prefix_as_int);
+     //   printf("PREFIX: %d\n",prefix_as_int);
         int suffix = ( 32 - prefix_as_int);
-        printf("SUFFIX: %d\n",suffix);
+     //   printf("SUFFIX: %d\n",suffix);
         unsigned int mask = -1U <<  suffix ;// -1 unsigned is 0xFFFFFFFF
     
 
@@ -109,16 +116,16 @@ bool Ip:: match(const GenericString &packet) const{
                   bitwise AND of the Mask and the packet_ip
                   and then check equality to the ip given in the rule
     **/
-                printf("the route is correct");
+           //     printf("the route is correct");
                 String packetIpWithMask = field_divided[1]->as_string().trim().as_string();
                 StringArray packetIpFull = (packetIpWithMask.split("/"));
                 String packetIpWithoutMask =(packetIpFull)[0]->as_string().trim().as_string();
                // String packetIpAddress = (field_divided[1])->as_string().split("/").as_string().trim().as_string();
                 int maskedRuleIp = ipToIntAndMask(ip_address,mask);
                 int maskedPacketIp = ipToIntAndMask(packetIpWithoutMask,mask);
-                printf("mask; %u\n", mask);
-                printf("maskedRuleIp: %d\n",maskedRuleIp);
-                printf("maskedPacketIp: %d\n",maskedPacketIp);
+           //     printf("mask; %u\n", mask);
+           //     printf("maskedRuleIp: %d\n",maskedRuleIp);
+           //     printf("maskedPacketIp: %d\n",maskedPacketIp);
                 if ( maskedRuleIp == maskedPacketIp ){
                     retVal=true;
                     break;

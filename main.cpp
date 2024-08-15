@@ -102,7 +102,6 @@ int main(int argc,char **argv) {
     // rule = *(rule.trim()); // ?
     rule.trim();
     StringArray rules_divided=rule.split("=");
-
 //for example will be  "dst-port"
         if(!rules_divided[1]) ;//std::cout << "\n\nrules_divided\n\n" << std::endl;
         String category = rules_divided[0]->as_string(); //TODO: match implementation of StringArray
@@ -143,8 +142,7 @@ int main(int argc,char **argv) {
         else if ( componentType == ip_str ){
             //another way
             //obj = new Ip(category,lowerLim,upperLim);
-
-             Ip ipObj(category,rule);
+            Ip ipObj(category,rules_divided[1]->as_string());
             parse_input(ipObj);
         }
       //  parse_input(obj);

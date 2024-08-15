@@ -18,6 +18,7 @@
 #include "generic-string.h"
 #include "input.h"
 #include "string-array.h"
+
 //old main
 /**
 int main(int argc,char **argv) {
@@ -103,6 +104,7 @@ int main(int argc,char **argv) {
     StringArray rules_divided=rule.split("=");
 
 //for example will be  "dst-port"
+        if(!rules_divided[1]) ;//std::cout << "\n\nrules_divided\n\n" << std::endl;
         String category = rules_divided[0]->as_string(); //TODO: match implementation of StringArray
         category.trim();
         StringArray category_divided=category.split("-");
@@ -112,13 +114,7 @@ int main(int argc,char **argv) {
         String limits=rules_divided[1]->as_string(); //TODO: match implementation of StringArray
         limits.trim();
 
-        StringArray limits_divided=limits.split("-");
-        String lowerLimStr=limits_divided[0]->as_string();// getting the lower limit
-        String upperLimStr=limits_divided[1]->as_string(); //getting the higher limit
-        lowerLimStr.trim();
-        upperLimStr.trim();
-        short lowerLim = (short) lowerLimStr.to_integer();
-        short upperLim = (short) upperLimStr.to_integer();
+        
 
 //TODO check for error in conversion int? to short
 
@@ -132,6 +128,14 @@ int main(int argc,char **argv) {
         if ( componentType == port_str ){
             //another way
           //  obj = new Port(category,lowerLim,upperLim);
+            StringArray limits_divided=limits.split("-");
+            if(!limits_divided[1]);// std::cout << "\n\nlimits_divided\n\n" << std::endl;
+            String lowerLimStr=limits_divided[0]->as_string();// getting the lower limit
+            String upperLimStr=limits_divided[1]->as_string(); //getting the higher limit
+            lowerLimStr.trim();
+            upperLimStr.trim();
+            short lowerLim = (short) lowerLimStr.to_integer();
+            short upperLim = (short) upperLimStr.to_integer();
 
             Port portObj(category,lowerLim,upperLim);
             parse_input(portObj);

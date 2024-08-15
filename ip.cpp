@@ -11,6 +11,7 @@
  */
 #include "string.h"
 #include "ip.h"
+#include <iostream>
 #define NUM_OF_FIELDS 4
 #define NUM_OF_OCTATES 4
 #define IP_OCTATE_SIZE 8
@@ -40,11 +41,14 @@ int Ip::ipToIntAndMask(String ipAddress,unsigned int mask) const {
         String octate = "" ;
         int octateINT = 0  ;
         int ShftLftBy = 0  ;
-        for (int i = 0; i <ipByOctate.get_size() ; ++i) {
-            octate = ipByOctate[i]->as_string();
-            octateINT = octate.to_integer();
-            ShftLftBy =( (3-i)*IP_OCTATE_SIZE ) ;
-            ipAddressINT+=( octateINT << ( ShftLftBy ) );
+        for (int i = 0; i <ipByOctate.get_size() ; i++) {
+            if(ipByOctate[i]){
+                octate = ipByOctate[i]->as_string();
+                octateINT = octate.to_integer();
+                ShftLftBy =( (3-i)*IP_OCTATE_SIZE ) ;
+                ipAddressINT+=( octateINT << ( ShftLftBy ) );
+            }
+            
         }
         return (ipAddressINT & mask) ;
     }
@@ -52,33 +56,38 @@ int Ip::ipToIntAndMask(String ipAddress,unsigned int mask) const {
 bool Ip:: match(const GenericString &packet) const{
         bool retVal = false ;
         //firewalled accepted ip-addresses calculations
-        StringArray ip_divided  = (this->ip).split("/"); //split  122.0.0.0/15 into  0: 122.0.0.0     1:  15
+        String copy_ip = this->ip;
+        StringArray ip_divided  = (copy_ip).split("/"); //split  122.0.0.0/15 into  0: 122.0.0.0     1:  15
+        if(!ip_divided[0]) ;//std::cout << "\n\n ip_devided 0 \n\n" << std::endl;
         String ip_address = (ip_divided[0])->as_string();
         ip_address.trim().as_string();
 
         //generating the subnet-mask:
+        if(!ip_divided[1]) ;//std::cout << "\n\nip_devided 1 \n\n" << std::endl;
         String prefix = (ip_divided[1])->as_string();
         prefix.trim().as_string();
         int prefix_as_int = prefix.to_integer();
         int suffix = ( 32 - prefix_as_int);
         unsigned int mask = -1U <<  suffix ;// -1 unsigned is 0xFFFFFFFF
-
+    
 
         //handling the packet
         //TODO: maybe trimming is needed
         //  (packet.as_string()).trim();
         StringArray packet_divided = packet.split(",");
-
+        
         for (int i = 0; i < packet_divided.get_size(); ++i) {
             //passing over the
             // "  src-ip =    XXX.XXX.XXX.XXX ,      dst-ip = YYY.YYY.YYY.YYY , src-port  = PRT,dst-port=PRT         "
 
             StringArray field_divided = packet_divided[i]->as_string().split("=");
+            // if(!ip_divided[0] || !ip_divided[1]) std::cout << "\n\nmatch for\n\n" << std::endl;
             String RouteType = (field_divided[0])->as_string().trim().as_string();
-            String packetIpAddress = (field_divided[1])->as_string().trim().as_string();
+            
             if ( RouteType==type_of_ip ){ // if field_divided[0] == "src-ip" or "dst-ip" according to "type_of_ip"
                 //   field_divided[1] is the ip of the packet
                 /**
+                 * 
                  NOW WE HAVE
                 field_divided[1] is the ip  :   66.10.6.15 given in the packet
                 ip_address is the ip given in the rule 122.0.0.0
@@ -99,6 +108,7 @@ bool Ip:: match(const GenericString &packet) const{
                   bitwise AND of the Mask and the packet_ip
                   and then check equality to the ip given in the rule
     **/
+                String packetIpAddress = (ip_divided[0])->as_string().trim().as_string();     
                 int maskedRuleIp = ipToIntAndMask(ip_address,mask);
                 int maskedPacketIp = ipToIntAndMask(packetIpAddress,mask);
 

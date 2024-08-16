@@ -34,4 +34,4 @@ for rule in $rules; do
     # echo -e "\n"
 done
 
-echo -e "$output"|sort|uniq|grep -v -e '^$'
+echo -e "$output"|sort|uniq|grep -v -e '^$'|sed 's/ //g'

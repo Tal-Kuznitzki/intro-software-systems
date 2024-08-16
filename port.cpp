@@ -51,7 +51,7 @@ bool Port::match(const GenericString &packet) const {
                 //   field_divided[1] is the port of the packet
                 (field_divided[1])->as_string().trim().as_string();
                 int packet_port_integer = field_divided[1]->as_string().to_integer(); //just for testing it is decoupled;
-                short packet_port = (short)packet_port_integer;
+                int packet_port = packet_port_integer;
                 if (  ( this->lowRangeNumber <= packet_port   )&& ( packet_port <= this->highRangeNumber )  ){
                     retVal=true;
                     break;

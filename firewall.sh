@@ -23,16 +23,15 @@ for rule in $rules; do
             continue
         fi
         
-        temp=$(echo $temp|./firewall.exe $field)
+        temp=$(echo -e "$temp"|./firewall.exe $field)
         # echo $temp | head
         # temp=$(./firewall.exe $field <&0)
         # echo $field
         # echo -e $temp
     done
-    
     output+=$temp
-    # output+="\n"
+    output+="\n"
     # echo -e "\n"
 done
 
-echo -e $output|sort|uniq
+echo -e "$output"|sort|uniq|grep -v -e '^$'
